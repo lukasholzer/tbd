@@ -71,13 +71,22 @@ run --incompatible_strict_action_env
 # collect coverage information from test targets
 coverage --instrument_test_targets
 
-build --bes_results_url=https://app.buildbuddy.io/invocation/
-build --bes_backend=grpcs://cloud.buildbuddy.io
-build --remote_cache=grpcs://cloud.buildbuddy.io
-build --remote_timeout=3600
-build --remote_executor=grpcs://cloud.buildbuddy.io
-build --remote_header=x-buildbuddy-api-key=l8A8H15cwHabi4Qc2MbN
+build:remote --bes_results_url=https://app.buildbuddy.io/invocation/
+build:remote --bes_backend=grpcs://cloud.buildbuddy.io
+build:remote --remote_cache=grpcs://cloud.buildbuddy.io
+build:remote --remote_executor=grpcs://cloud.buildbuddy.io
+build:remote --remote_upload_local_results
+build:remote --remote_timeout=3600
+build:remote --host_platform=@buildbuddy_toolchain//:platform
+build:remote --platforms=@buildbuddy_toolchain//:platform
+build:remote --crosstool_top=@buildbuddy_toolchain//:toolchain
+build:remote --jobs=100
 
+build:ci --config=remote
+build:ci --build_metadata=ROLE=CI
+build:ci --build_metadata=VISIBILITY=PUBLIC
+build:ci --tls_client_certificate=buildbuddy-cert.pem
+build:ci --tls_client_key=buildbuddy-key.pem
 build:ci --repository_cache=/home/runner/repo-cache/
 
 # Load any settings specific to the current user.
