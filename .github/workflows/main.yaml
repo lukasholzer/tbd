@@ -28,6 +28,6 @@ jobs:
         run: |
           "${GITHUB_WORKSPACE}/bin/bazel" build --config=ci //...
           
-      - name: Test
-        run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" test --config=ci //...
+      # - name: Test
+      #   run: |
+      #     "${GITHUB_WORKSPACE}/bin/bazel" test --config=ci //...
