@@ -1,0 +1,46 @@
+load("//tools:index.bzl", "jest_test", "ts_compile")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_project")
+
+ts_compile(
+    name = "module-a",
+    package_name = "@tbd/module-a",
+    srcs = glob(
+        ["**/*.ts*"],
+        exclude = ["*.test.ts"],
+    ),
+    esm = True,
+    deps = [
+        "//packages/module-b",
+        "@npm//@types/node",
+    ],
+)
+
+ts_project(
+    name = "tests",
+    srcs = glob(["**/*.test.ts"]),
+    declaration = True,
+    extends = "//:tsconfig.json",
+    tsconfig = ":tsconfig.json",
+    deps = [
+        "//packages/module-b",
+        "@npm//@types/jest",
+        "@npm//@types/node",
+    ],
+)
+
+jest_test(
+    name = "unit",
+    srcs = [":tests"],
+    deps = [
+        "//packages/module-b",
+    ],
+)
+
+nodejs_binary(
+    name = "serve",
+    data = [
+        ":module-a",
+    ],
+    entry_point = "main.ts",
+)

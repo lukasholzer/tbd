@@ -1,0 +1,12 @@
+load("//tools:index.bzl", "ts_compile")
+
+ts_compile(
+    name = "module-b",
+    package_name = "@tbd/module-b",
+    srcs = glob(["*.ts"]),
+    deps = [
+        "@npm//@types/node",
+    ],
+)
+
+
