@@ -31,10 +31,7 @@ ts_project(
 
 jest_test(
     name = "unit",
-    srcs = [":tests"],
-    deps = [
-        "//packages/module-b",
-    ],
+    srcs = [":tests"]
 )
 
 nodejs_binary(

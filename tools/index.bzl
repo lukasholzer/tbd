@@ -76,6 +76,7 @@ def jest_test(
     """
 
     templated_args = [
+        "--nobazel_patch_module_resolver",  
         "--config",
         "$(rootpath %s)" % jest_config,
         "--no-cache",
@@ -83,7 +84,6 @@ def jest_test(
         "--ci",
         "--runInBand",
         "--colors",
-        
     ] + additional_args
 
     for src in srcs:
@@ -93,9 +93,6 @@ def jest_test(
         "@npm//@types/node",
         "@npm//@types/jest",
         "@npm//tslib",
-        # "@npm//ts-jest",
-        # "@npm//@jest/transform",
-        # "//:tsconfig.json",
         "//tools:jest-reporter.js",
     ]
 
