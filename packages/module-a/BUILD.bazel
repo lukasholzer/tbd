@@ -1,4 +1,4 @@
-load("//tools:index.bzl", "jest_test", "ts_compile")
+load("//tools:index.bzl", "jest_test", "prettier", "ts_compile")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
 
@@ -31,7 +31,7 @@ ts_project(
 
 jest_test(
     name = "unit",
-    srcs = [":tests"]
+    srcs = [":tests"],
 )
 
 nodejs_binary(
@@ -40,4 +40,9 @@ nodejs_binary(
         ":module-a",
     ],
     entry_point = "main.ts",
+)
+
+prettier(
+    name = "prettier",
+    srcs = glob(["**/*"]),
 )

@@ -1,4 +1,3 @@
-import { moduleB } from "@tbd/module-b";
+import {moduleB} from '@tbd/module-b';
 
-
-console.log(moduleB())
+console.log(moduleB());

@@ -3,6 +3,7 @@
 load("@npm//@bazel/typescript:index.bzl", "ts_project")
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("@npm//jest:index.bzl", "jest", _jest_test = "jest_test")
+load("@npm//prettier:index.bzl", _prettier = "prettier", _prettier_test = "prettier_test")
 
 def ts_compile(name, srcs, deps, package_name = None, package_json = None, esm = True):
     """Compile TS with prefilled args.
@@ -76,7 +77,7 @@ def jest_test(
     """
 
     templated_args = [
-        "--nobazel_patch_module_resolver",  
+        "--nobazel_patch_module_resolver",
         "--config",
         "$(rootpath %s)" % jest_config,
         "--no-cache",
@@ -109,5 +110,46 @@ def jest_test(
         name = "%s.update" % name,
         data = data,
         templated_args = templated_args + ["-u"],
+        **kwargs
+    )
+
+def prettier(name, srcs, config = "//:.prettierrc.js", **kwargs):
+    native.filegroup(
+        name = "%s_srcs" % name,
+        srcs = srcs,
+    )
+
+    data = [
+        "%s_srcs" % name,
+        config,
+        "//:.prettierignore",
+    ]
+    args = [
+        "--config",
+        "$(rootpath %s)" % config,
+        "--loglevel",
+        "warn",
+    ]
+
+    _prettier_test(
+        name = "%s_test" % name,
+        data = data,
+        templated_args = args + [
+            "--check",
+            "$(rootpaths :%s_srcs)" % name,
+        ],
+        **kwargs
+    )
+
+    _prettier(
+        name = name,
+        data = data,
+        templated_args = args + [
+            "--write",
+            "$(rootpaths :%s_srcs)" % name,
+        ],
+        visibility = [
+            "//:__pkg__",
+        ],
         **kwargs
     )

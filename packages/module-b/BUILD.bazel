@@ -1,4 +1,4 @@
-load("//tools:index.bzl", "ts_compile")
+load("//tools:index.bzl", "prettier", "ts_compile")
 
 ts_compile(
     name = "module-b",
@@ -9,4 +9,7 @@ ts_compile(
     ],
 )
 
-
+prettier(
+    name = "prettier",
+    srcs = glob(["**/*"]),
+)
