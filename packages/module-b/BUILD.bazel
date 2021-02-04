@@ -1,9 +1,13 @@
 load("//tools:index.bzl", "prettier", "ts_compile")
+load("@npm//@bazel/typescript:index.bzl", "ts_config")
 
 ts_compile(
     name = "module-b",
     package_name = "@tbd/module-b",
     srcs = glob(["*.ts"]),
+    declaration = True,
+    source_map = True,
+    tsconfig = ":tsconfig_app",
     deps = [
         "@npm//@types/node",
     ],
@@ -12,4 +16,22 @@ ts_compile(
 prettier(
     name = "prettier",
     srcs = glob(["**/*"]),
+)
+
+ts_config(
+    name = "tsconfig_app",
+    src = ":tsconfig.app.json",
+    deps = [
+        ":tsconfig.json",
+        "//:tsconfig.base.json",
+    ],
+)
+
+ts_config(
+    name = "tsconfig_test",
+    src = ":tsconfig.test.json",
+    deps = [
+        ":tsconfig.json",
+        "//:tsconfig.base.json",
+    ],
 )

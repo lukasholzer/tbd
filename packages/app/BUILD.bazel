@@ -1,0 +1,56 @@
+load("//tools:index.bzl", "jest_test", "prettier")
+load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_project")
+
+ts_project(
+    name = "app",
+    srcs = glob(
+        ["**/*.ts*"],
+        exclude = ["*.test.ts"],
+    ),
+    source_map = False,
+    tsconfig = ":tsconfig_app",
+    deps = [
+        "@npm//@types/node",
+        "@npm//preact",
+    ],
+)
+
+ts_project(
+    name = "tests",
+    srcs = glob(["**/*.test.ts"]),
+    declaration = False,
+    tsconfig = ":tsconfig_test",
+    deps = [
+        "//packages/module-b",
+        "@npm//@types/jest",
+        "@npm//@types/node",
+    ],
+)
+
+jest_test(
+    name = "unit",
+    srcs = [":tests"],
+)
+
+prettier(
+    name = "prettier",
+    srcs = glob(["**/*"]),
+)
+
+ts_config(
+    name = "tsconfig_app",
+    src = ":tsconfig.app.json",
+    deps = [
+        ":tsconfig.json",
+        "//:tsconfig.base.json",
+    ],
+)
+
+ts_config(
+    name = "tsconfig_test",
+    src = ":tsconfig.test.json",
+    deps = [
+        ":tsconfig.json",
+        "//:tsconfig.base.json",
+    ],
+)

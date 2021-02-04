@@ -1,6 +1,6 @@
 exports_files([
-    "tsconfig.esm.json",
-    "tsconfig.json",
+    # "tsconfig.esm.json",
+    "tsconfig.base.json",
     "jest.config.js",
     ".prettierrc.js",
     ".prettierignore",

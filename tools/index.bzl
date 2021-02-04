@@ -5,7 +5,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("@npm//jest:index.bzl", "jest", _jest_test = "jest_test")
 load("@npm//prettier:index.bzl", _prettier = "prettier", _prettier_test = "prettier_test")
 
-def ts_compile(name, srcs, deps, package_name = None, package_json = None, esm = True):
+def ts_compile(name, srcs, deps, package_name = None, package_json = None, **kwargs):
     """Compile TS with prefilled args.
 
     Args:
@@ -15,27 +15,16 @@ def ts_compile(name, srcs, deps, package_name = None, package_json = None, esm =
         package_name: name from package.json
         package_json: If a package.json is here provide it
         esm: If an e
+        **kwargs: Keyword arguments
     """
     deps = deps + ["@npm//tslib"]
 
     ts_project(
         name = "%s-base" % name,
         srcs = srcs,
-        declaration = True,
-        tsconfig = "tsconfig.json",
-        extends = "//:tsconfig.json",
         deps = deps,
+        **kwargs
     )
-    if esm:
-        ts_project(
-            name = "%s-esm" % name,
-            srcs = srcs,
-            declaration = True,
-            extends = "//:tsconfig.json",
-            out_dir = "esm",
-            tsconfig = "//:tsconfig.esm.json",
-            deps = deps,
-        )
 
     native.filegroup(
         name = "types",
@@ -48,7 +37,7 @@ def ts_compile(name, srcs, deps, package_name = None, package_json = None, esm =
         name = name,
         package_name = package_name,
         srcs = ["package.json"] if package_json else [],
-        deps = [":%s-base" % name] + ([":%s-esm" % name] if esm else []),
+        deps = [":%s-base" % name],
         visibility = ["//visibility:public"],
     )
 
