@@ -1,3 +1,5 @@
+load("//tools:binary.bzl", "binary")
+
 exports_files([
     # "tsconfig.esm.json",
     "tsconfig.base.json",
@@ -5,3 +7,7 @@ exports_files([
     ".prettierrc.js",
     ".prettierignore",
 ])
+
+binary(
+    name = "run"
+)
